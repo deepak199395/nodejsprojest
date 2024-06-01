@@ -1,7 +1,14 @@
 import express from "express"
 import userModel from "../Model/userModel.js";
+import jwt from "jsonwebtoken";
+
 import { hashPassword } from "../../Helper/authHelper.js";
 import users from "../Model/userModel.js"
+
+// JWT Secret Key
+const JWT_SECRET = "gvggcfcfxxxxfgggfxfgx"; // Replace with your actual secret
+
+
 export const createUser=async(req,res)=>{
  try {
     const {name,lastname,email,phone,password}=req.body;
@@ -41,10 +48,13 @@ const newUser= await userModel.create({
     phone,
     password:hashedPassword,
 });
+const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: "1h" });
+
 res.status(201).send({
     status:"success",
     message:"user register sucssfully",
-    user:newUser
+    user:newUser,
+    token,
 })
  } catch (error) {
     console.log(`Error in API:${error}`);
