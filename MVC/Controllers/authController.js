@@ -1,6 +1,6 @@
-import express from "express"
 import userModel from "../Model/userModel.js";
 import jwt from "jsonwebtoken";
+import upload from "../../Helper/Image.js"; // Path to multer configuration
 
 import { hashPassword } from "../../Helper/authHelper.js";
 import users from "../Model/userModel.js"
@@ -9,58 +9,54 @@ import users from "../Model/userModel.js"
 const JWT_SECRET = "gvggcfcfxxxxfgggfxfgx"; // Replace with your actual secret
 
 
-export const createUser=async(req,res)=>{
- try {
-    const {name,lastname,email,phone,password}=req.body;
+export const createUser = async (req, res) => {
+  try {
+      upload(req, res, async (err) => {
+          if (err) {
+              return res.status(400).send(err);
+          } else {
+              const { name, lastname, email, phone, password } = req.body;
+              let image = req.file ? req.file.path : null;
 
-    // validation
+              // Validation
+              if (!name) return res.status(400).send("Name is required");
+              if (!lastname) return res.status(400).send("Lastname is required");
+              if (!email) return res.status(400).send("Email is required");
+              if (!phone) return res.status(400).send("Phone is required");
+              if (!password) return res.status(400).send("Password is required");
 
-    if(!name){
-        return res.status(400).send("name is require")
-    }
-    if(!lastname){
-        return res.status(400).send("lastname is require")
-    }
-    if(!email){
-        return res.status(400).send("email is require")
-    }
-    if(!phone){
-        return res.status(400).send("phone is require")
+              // Existing user validation
+              const existingUser = await userModel.findOne({ email });
+              if (existingUser) {
+                  return res.status(400).send("User already exists");
+              }
 
-    }
-    if(!password){
-        return res.status(400).send("password is require")
-    }
-// existing user validation  
+              // Create a new user
+              const hashedPassword = await hashPassword(password);
+              const newUser = await userModel.create({
+                  name,
+                  lastname,
+                  email,
+                  phone,
+                  password: hashedPassword,
+                  image
+              });
 
-const existingUser= await userModel.findOne({email})
-if(existingUser){
-    return res.status(400).send("user is already exist")
-}
+              const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: "1h" });
 
-
-// create a new user
-const hashedPassword= await hashPassword(password)
-const newUser= await userModel.create({
-    name,
-    lastname,
-    email,
-    phone,
-    password:hashedPassword,
-});
-const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: "1h" });
-
-res.status(201).send({
-    status:"success",
-    message:"user register sucssfully",
-    user:newUser,
-    token,
-})
- } catch (error) {
-    console.log(`Error in API:${error}`);
-   res.status(500).send("internal server erroe")
- }
-}
+              res.status(201).send({
+                  status: "success",
+                  message: "User registered successfully",
+                  user: newUser,
+                  token
+              });
+          }
+      });
+  } catch (error) {
+      console.log(`Error in API: ${error}`);
+      res.status(500).send("Internal server error");
+  }
+};
 
 export const getUsersController=async(req,res)=>{
   try {
@@ -121,11 +117,6 @@ export const userUpdateController = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 };
-
-
-
-
-
 // Delete user by ID
 export const deleteUserController = async (req, res) => {
   try {
@@ -149,9 +140,6 @@ export const deleteUserController = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 };
-
-
-
 // Partially update user details
 export const patchUserController = async (req, res) => {
   try {
