@@ -1,12 +1,12 @@
-// src/App.js
 import React from "react";
 import RegisterForm from "./Components/RegisterForm";
+import UserList from "./Components/UserList";
 
 const App = () => {
   return (
     <div>
-      <h1>User Registration</h1>
-          <RegisterForm />
+   <RegisterForm/>
+    <UserList/>
       </div>
   );
 };

@@ -1,7 +1,7 @@
 import express from "express";
 import { createUser, deleteUserController, getSingleUserController, getUsersController, patchUserController, userUpdateController } from "../Controllers/authController.js";
 
-const router = express.Router();
+const router = express.Router()
 
 // Routes for API
 router.post("/register", createUser);
