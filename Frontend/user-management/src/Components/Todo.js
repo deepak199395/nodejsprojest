@@ -1,26 +1,27 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import {useDispatch,useSelector} from "react-redux"
 import { fetchTodo } from '../ReduxToolkit/Slice/TodoSlice'
-
 const Todo = () => {
-    const dispatch = useDispatch()
-    const todoState = useSelector((state) => state.todo)  
-    console.log("deepak", todoState);
+  const dispatch=useDispatch()
 
-    if (todoState.isLoading) {
-        return <h1>Loading...</h1>  // Improved loading message
-    }
+  const todoState=useSelector((state)=>state.todo)
+  console.log("result",todoState);
 
-    return (
-        <div>
-            <button onClick={() => dispatch(fetchTodo())}>Fetch Todo</button>  
-            <ul>
-                {
-                    todoState.data.map((e, index) => <li key={index}>{e.title}</li>)  // Added key prop
-                }
-            </ul>
-        </div>
-    )
+if(todoState.isLoading){
+    return <h1>Loading.....</h1>
 }
+
+  return (
+    <div>
+      <button onClick={()=>dispatch(fetchTodo())}>Fetch todo</button>
+      <ul>
+      {
+        todoState.data.map((e,index)=> <li key={index}>{e.title}</li>)
+      }
+      </ul>
+    </div>
+  )
+}
+
 
 export default Todo
