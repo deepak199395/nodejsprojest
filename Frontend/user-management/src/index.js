@@ -5,12 +5,13 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from "react-redux";
 import store from './ReduxToolkit/Store';
-import Todo from './Components/Todo';
+//import Todo from './Components/Todo';
+import LassyLoading from './Components/LassyLoading';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
   <Provider store={store}>
-    <Todo/>
+   <LassyLoading/>
   </Provider>
   </React.StrictMode>
 );
