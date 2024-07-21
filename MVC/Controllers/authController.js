@@ -1,10 +1,11 @@
 import userModel from "../Model/userModel.js";
 import jwt from "jsonwebtoken";
-import upload from "../../Helper/Image.js"; // Path to multer configuration
-import { hashPassword, comparePassword } from "../../Helper/authHelper.js"; // Assuming comparePassword is a function to compare passwords
+import upload from "../../Helper/Image.js"; 
+import { hashPassword, comparePassword } from "../../Helper/authHelper.js"; 
+import crypto from 'crypto';
 
 // JWT Secret Key
-const JWT_SECRET = "gvggcfcfxxxxfgggfxfgx"; // Replace with your actual secret
+const JWT_SECRET = "gvggcfcfxxxxfgggfxfgx"; 
 
 export const createUser = async (req, res) => {
   try {
@@ -36,7 +37,7 @@ export const createUser = async (req, res) => {
           email,
           phone,
           password: hashedPassword,
-          image
+          image,
         });
 
         const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: "1h" });
@@ -219,5 +220,74 @@ export const userLoginController = async (req, res) => {
   } catch (error) {
     console.log(`Error in API: ${error}`);
     res.status(500).send("Internal server error");
+  }
+};
+
+// Test controller
+export const testController = (req, res) => {
+  res.send('protected route');
+}
+
+// Forgot password controller
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if email exists
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Generate a token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    // Set token and expiry on the user document
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+    await user.save();
+
+   
+    res.status(200).send({
+      status: 'success',
+      message: 'Password reset token has been sent',
+      resetToken
+    });
+  } catch (error) {
+    console.log(`Error in API: ${error}`);
+    res.status(500).send('Internal server error');
+  }
+};
+
+// Reset password controller
+export const resetPasswordController = async (req, res) => {
+  try {
+    const { resetToken, newPassword } = req.body;
+
+    // Find user by reset token and check if the token has not expired
+    const user = await userModel.findOne({
+      resetPasswordToken: resetToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).send('Invalid or expired token');
+    }
+
+    // Hash the new password and save it
+    user.password = await hashPassword(newPassword);
+    user.resetPasswordToken = undefined; // Clear the reset token
+    user.resetPasswordExpires = undefined; // Clear the token expiry
+
+    await user.save();
+
+    res.status(200).send({
+      status: 'success',
+      message: 'Password has been reset successfully'
+    });
+  } catch (error) {
+    console.log(`Error in API: ${error}`);
+    res.status(500).send('Internal server error');
   }
 };
