@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const userSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true // Use 'required' instead of 'require'
+    required: true 
   },
   lastname: {
     type: String,
@@ -23,7 +23,8 @@ const userSchema = mongoose.Schema({
     required: true
   },
   image: {
-    type: String,
+    type: Buffer,
+    contentType:String,
     required: false
   },
   resetPasswordToken: {
@@ -36,4 +37,4 @@ const userSchema = mongoose.Schema({
   }
 }, { timestamps: true });
 
-export default mongoose.model("User", userSchema); // Use 'User' instead of 'users'
+export default mongoose.model("User", userSchema); 

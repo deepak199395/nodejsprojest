@@ -7,12 +7,13 @@ import {Provider} from "react-redux";
 import store from './ReduxToolkit/Store';
 //import Todo from './Components/Todo';
 //import LassyLoading from './Components/LassyLoading';
-import ErrorBoundary from './Components/ErrorBoundary';
+//import ErrorBoundary from './Components/ErrorBoundary';
+import Product from './Components/Product';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
   <Provider store={store}>
-   <ErrorBoundary/>
+   <Product/>
   </Provider>
   </React.StrictMode>
 );
