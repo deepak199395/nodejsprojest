@@ -8,12 +8,12 @@ import store from './ReduxToolkit/Store';
 //import Todo from './Components/Todo';
 //import LassyLoading from './Components/LassyLoading';
 //import ErrorBoundary from './Components/ErrorBoundary';
-import Payment from './Components/Productpayment';
+import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
   <Provider store={store}>
-   <Payment/>
+  <App/>
   </Provider>
   </React.StrictMode>
 );
