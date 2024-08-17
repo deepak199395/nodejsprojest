@@ -1,5 +1,5 @@
 import fs from 'fs';
-import Product from '../Model/ProductModel.js'; // Adjust the path to your model
+import Product from '../Model/ProductModel.js';
 
 export const productController = async (req, res) => {
   try {

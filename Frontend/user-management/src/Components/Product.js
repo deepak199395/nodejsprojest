@@ -9,7 +9,7 @@ const Product = () => {
   // Fetch products from API
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/user/get-product"); // Adjust the endpoint as needed
+      const response = await axios.get("http://localhost:8080/api/v1/user/get-product"); 
       console.log(response);
       setProducts(response.data);
     } catch (err) {
@@ -39,7 +39,7 @@ const Product = () => {
               <img
                 src={product.image}
                 alt={product.name}
-                style={{ width: '100px', height: '100px' }} // Adjust as needed
+                style={{ width: '100px', height: '100px' }}
               />
             )}
           </li>

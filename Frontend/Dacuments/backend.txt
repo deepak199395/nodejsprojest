@@ -1,0 +1,16 @@
+project-root/
+├── Controllers/
+│   ├── authController.js
+│   ├── productController.js
+│   ├── paymentController.js
+├── Db/
+│   ├── Db.js
+├── Helper/
+│   ├── middleware/
+│       ├── authMiddleware.js
+├── MVC/
+│   ├── Route/
+│       ├── authRout.js
+├── .env
+├── server.js
+├── package.json
