@@ -14,3 +14,9 @@ project-root/
 ├── .env
 ├── server.js
 ├── package.json
+  
+  token file.  
+{
+  "clientToken": "sandbox_f252zhq7_hh4cpc39zq4rgjcg"
+}
+
