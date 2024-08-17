@@ -5,7 +5,7 @@ import axios from 'axios';
 const Payment = () => {
   const [clientToken, setClientToken] = useState(null);
   const [instance, setInstance] = useState(null);
-  const [amount, setAmount] = useState('10.00'); 
+  const [amount] = useState('10.00'); 
 
   useEffect(() => {
     const fetchClientToken = async () => {
