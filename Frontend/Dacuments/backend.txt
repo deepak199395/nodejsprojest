@@ -19,4 +19,8 @@ project-root/
 {
   "clientToken": "sandbox_f252zhq7_hh4cpc39zq4rgjcg"
 }
+{
+  "paymentMethodNonce": "fake-valid-nonce",
+  "amount": "11.00"
+}
 
