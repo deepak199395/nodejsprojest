@@ -212,7 +212,7 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
               value={cardDetails.cardNumber}
               onChange={handleCardDetailsChange}
               className="form-control"
-              placeholder="Enter your card number"
+              placeholder="0000 0000 0000 0000"
               required
             />
           </div>

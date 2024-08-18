@@ -19,10 +19,8 @@ const App = () => {
 
     // Dummy transactions
     setTransactions([
-      { id: 1, amount: '100.00', status: 'Success' },
-      { id: 2, amount: '50.00', status: 'Failed' }
     ]);
-  }, []);
+      }, []);
 
   const handleNewTransaction = (transaction) => {
     setTransactions([...transactions, transaction]);
@@ -30,7 +28,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>Payment Gateway</h1>
+      <h1 style={{marginLeft:"550px"}}>Payment Gateway</h1>
       <PaymentForm clientToken={clientToken} onNewTransaction={handleNewTransaction} />
       <Transactions transactions={transactions} />
     </div>

@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 8000;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000', // Adjust based on your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods if needed
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
   credentials: true, // Enable if your requests require credentials (e.g., cookies)
 }));
 app.use(morgan('dev'));
