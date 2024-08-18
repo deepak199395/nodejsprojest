@@ -50,11 +50,27 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
       const newTransaction = { id: Date.now(), amount, status: response.data.success ? 'Success' : 'Failed' };
       setTransactions([...transactions, newTransaction]);
       onNewTransaction(newTransaction);
+      // Reset form fields
+      setPaymentMethodNonce('');
+      setAmount('');
+      setSelectedMethod('');
+      setUpiId('');
+      setSelectedCard('');
+      setCardDetails({ cardNumber: '', expiryDate: '', cvv: '' });
+      setBankDetails({ bankName: '', ifscCode: '', branchName: '' });
     } catch (error) {
       console.error('Error processing payment', error);
       const newTransaction = { id: Date.now(), amount, status: 'Failed' };
       setTransactions([...transactions, newTransaction]);
       onNewTransaction(newTransaction);
+      // Reset form fields
+      setPaymentMethodNonce('');
+      setAmount('');
+      setSelectedMethod('');
+      setUpiId('');
+      setSelectedCard('');
+      setCardDetails({ cardNumber: '', expiryDate: '', cvv: '' });
+      setBankDetails({ bankName: '', ifscCode: '', branchName: '' });
     }
   };
 
