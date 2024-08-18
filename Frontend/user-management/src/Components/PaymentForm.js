@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../../src/Components/PaymentForm.css'; // Import CSS file for styling
-import googlePayLogo from '../../src/assets/google-pay.png'; // Replace with the actual path to the Google Pay logo
-import phonePayLogo from '../../src/assets/phone-pay.png'; // Replace with the actual path to the Phone Pay logo
-import netBankingLogo from '../../src/assets/net-banking.png'; // Replace with the actual path to the Net Banking logo
-import qrCodeImage from '../../src/assets/fake-qr-code.png'; // Replace with the actual path to the fake QR code image
+import '../../src/Components/PaymentForm.css'; 
+import googlePayLogo from '../../src/assets/google-pay.png'; 
+import phonePayLogo from '../../src/assets/phone-pay.png'; 
+import netBankingLogo from '../../src/assets/net-banking.png'; 
+import qrCodeImage from '../../src/assets/fake-qr-code.png'; 
+import cardPaymentLogo from '../../src/assets/card-payment.png'; 
+import visaLogo from '../../src/assets/visa.png'; 
+import masterCardLogo from '../../src/assets/mastercard.png';
+import ruPayLogo from '../../src/assets/rupay.png'; 
+import bhimLogo from '../../src/assets/bhim.png'; 
 
 const PaymentForm = ({ clientToken, onNewTransaction }) => {
   const [paymentMethodNonce, setPaymentMethodNonce] = useState('');
   const [amount, setAmount] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('');
   const [upiId, setUpiId] = useState('');
+  const [selectedCard, setSelectedCard] = useState('');
+  const [cardDetails, setCardDetails] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+  });
   const [bankDetails, setBankDetails] = useState({
     bankName: '',
     ifscCode: '',
@@ -30,6 +41,8 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
       paymentData.bankDetails = bankDetails;
     } else if (selectedMethod === 'phone-pay') {
       paymentData.upiId = upiId;
+    } else if (selectedMethod === 'card-payment') {
+      paymentData.cardDetails = { ...cardDetails, selectedCard };
     }
 
     try {
@@ -47,7 +60,19 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
 
   const handleBankDetailsChange = (e) => {
     const { name, value } = e.target;
-    setBankDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
+    const regex = /^[A-Za-z\s]+$/;
+    if (name === 'bankName' || name === 'branchName') {
+      if (regex.test(value) || value === '') {
+        setBankDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
+      }
+    } else {
+      setBankDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
+    }
+  };
+
+  const handleCardDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setCardDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
   };
 
   return (
@@ -66,6 +91,10 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
           <img src={netBankingLogo} alt="Net Banking" />
           <span>Net Banking</span>
         </div>
+        <div className="payment-method" onClick={() => setSelectedMethod('card-payment')}>
+          <img src={cardPaymentLogo} alt="Card Payment" />
+          <span>Card Payment</span>
+        </div>
       </div>
       {selectedMethod === 'net-banking' && (
         <div className="net-banking-form">
@@ -78,6 +107,7 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
               value={bankDetails.bankName}
               onChange={handleBankDetailsChange}
               className="form-control"
+              placeholder="Enter your bank name"
               required
             />
           </div>
@@ -90,6 +120,7 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
               value={bankDetails.ifscCode}
               onChange={handleBankDetailsChange}
               className="form-control"
+              placeholder="Enter your bank's IFSC code"
               required
             />
           </div>
@@ -102,6 +133,7 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
               value={bankDetails.branchName}
               onChange={handleBankDetailsChange}
               className="form-control"
+              placeholder="Enter your bank's branch name"
               required
             />
           </div>
@@ -118,11 +150,97 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
               value={upiId}
               onChange={(e) => setUpiId(e.target.value)}
               className="form-control"
+              placeholder="Enter your UPI ID"
               required
             />
           </div>
           <div className="qr-code-container">
             <img src={qrCodeImage} alt="QR Code" className="qr-code" />
+          </div>
+        </div>
+      )}
+      {selectedMethod === 'card-payment' && (
+        <div className="card-payment-form">
+          <div className="card-selection">
+            <label>
+              <input
+                type="radio"
+                name="card"
+                value="visa"
+                checked={selectedCard === 'visa'}
+                onChange={() => setSelectedCard('visa')}
+              />
+              <img src={visaLogo} alt="Visa" className="card-logo" />
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="card"
+                value="mastercard"
+                checked={selectedCard === 'mastercard'}
+                onChange={() => setSelectedCard('mastercard')}
+              />
+              <img src={masterCardLogo} alt="MasterCard" className="card-logo" />
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="card"
+                value="rupay"
+                checked={selectedCard === 'rupay'}
+                onChange={() => setSelectedCard('rupay')}
+              />
+              <img src={ruPayLogo} alt="RuPay" className="card-logo" />
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="card"
+                value="bhim"
+                checked={selectedCard === 'bhim'}
+                onChange={() => setSelectedCard('bhim')}
+              />
+              <img src={bhimLogo} alt="BHIM" className="card-logo" />
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="cardNumber">Card Number:</label>
+            <input
+              id="cardNumber"
+              name="cardNumber"
+              type="text"
+              value={cardDetails.cardNumber}
+              onChange={handleCardDetailsChange}
+              className="form-control"
+              placeholder="Enter your card number"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="expiryDate">Expiry Date:</label>
+            <input
+              id="expiryDate"
+              name="expiryDate"
+              type="text"
+              value={cardDetails.expiryDate}
+              onChange={handleCardDetailsChange}
+              className="form-control"
+              placeholder="MM/YY"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="cvv">CVV:</label>
+            <input
+              id="cvv"
+              name="cvv"
+              type="text"
+              value={cardDetails.cvv}
+              onChange={handleCardDetailsChange}
+              className="form-control"
+              placeholder="Enter your card's CVV"
+              required
+            />
           </div>
         </div>
       )}
@@ -135,6 +253,7 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="form-control"
+            placeholder="Enter the amount"
             required
           />
         </div>
@@ -146,6 +265,7 @@ const PaymentForm = ({ clientToken, onNewTransaction }) => {
             value={paymentMethodNonce}
             onChange={(e) => setPaymentMethodNonce(e.target.value)}
             className="form-control"
+            placeholder="Enter the payment method nonce"
             required
           />
         </div>
