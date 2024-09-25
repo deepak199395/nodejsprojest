@@ -49,5 +49,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Listening to port number ${PORT}`.bgCyan.blue);
 });
-console.log(`Port: ${process.env.PORT}`);
-console.log(`Braintree Public Key: ${process.env.BRAINTREE_PUBLIC_KEY}`);

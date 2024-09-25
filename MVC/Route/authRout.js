@@ -18,7 +18,6 @@ import {
     productController,
 } from "../Controllers/ProcutController.js";
 import formidable from "express-formidable";
-import { generateClientToken, processPayment } from "../Controllers/paymentController.js";
 
 const router = express.Router();
 
@@ -39,8 +38,5 @@ router.post("/create-product", formidable(), productController);
 router.get("/get-product", getProductsController);
 router.get("/get-productbyID/:id", getProductByIdController);
 
-// Payment Routes
-router.get('/get-client-token', generateClientToken);
-router.post('/process-payment', processPayment);
 
 export default router;
